@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="オレオレ">
-<title>俺のオレンジコート - v54.0 Legacy & Evolution</title>
+<title>俺のオレンジコート - v54.1 Fixed</title>
 <script>
   // === アプリアイコン (SVG) ===
   const ICON_SVG = `data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2250%22 fill=%22%23e67e22%22/><path d=%22M50 0 C50 0 80 20 80 50 C80 80 50 100 50 100 M0 50 C0 50 20 20 50 20 C80 20 100 50 100 50 M0 50 C0 50 20 80 50 80 C80 80 100 50 100 50%22 stroke=%22white%22 stroke-width=%224%22 fill=%22none%22/></svg>`;
@@ -17,17 +17,11 @@
 <style>
   /* === UI Design: v37.0 Base + v53.0 Size === */
   :root {
-    --bg: #f4f6f9; /* v37系背景色に戻しました */
-    --text: #2c3e50;
-    --sub: #7f8c8d;
-    --card: #ffffff;
-    --border: #dcdde1;
-    --shadow: rgba(0, 0, 0, 0.1);
-    --main: #3498db;
-    --accent: #e67e22; 
-    --win: #f1c40f;
-    --lose: #e74c3c;
-    --ok: #27ae60;
+    --bg: #f4f6f9; 
+    --text: #2c3e50; --sub: #7f8c8d; --card: #ffffff;
+    --border: #dcdde1; --shadow: rgba(0, 0, 0, 0.1);
+    --main: #3498db; --accent: #e67e22; 
+    --win: #f1c40f; --lose: #e74c3c; --ok: #27ae60;
     
     /* ポジションカラー */
     --c-oh: #3498db; --c-mb: #27ae60; --c-s: #f1c40f; --c-l: #e67e22;
@@ -37,23 +31,15 @@
 
   body {
     font-family: "Helvetica Neue", Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    margin: 0;
-    padding: 10px;
-    padding-bottom: 120px;
-    user-select: none;
-    line-height: 1.5;
+    background: var(--bg); color: var(--text);
+    margin: 0; padding: 10px; padding-bottom: 120px;
+    user-select: none; line-height: 1.5;
     -webkit-tap-highlight-color: transparent;
   }
   
   button {
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: bold;
-    border: none;
-    touch-action: manipulation;
-    transition: opacity 0.2s;
+    cursor: pointer; font-family: inherit; font-weight: bold;
+    border: none; touch-action: manipulation; transition: opacity 0.2s;
   }
   button:active { opacity: 0.7; }
   
@@ -62,12 +48,8 @@
   @keyframes fade { from{opacity:0; transform:translateY(5px);} to{opacity:1; transform:translateY(0);} }
 
   .btn {
-    width: 100%;
-    padding: 14px;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 1rem;
-    margin-top: 10px;
+    width: 100%; padding: 14px; border-radius: 8px;
+    color: #fff; font-size: 1rem; margin-top: 10px;
     box-shadow: 0 2px 5px var(--shadow);
   }
   .btn-m { background: var(--main); }
@@ -76,133 +58,63 @@
   .btn-y { background: var(--accent); }
 
   .header {
-    background: #fff;
-    padding: 15px;
-    border-radius: 12px;
-    margin-bottom: 15px;
-    border: 1px solid var(--border);
-    text-align: center;
-    box-shadow: 0 2px 8px var(--shadow);
+    background: #fff; padding: 15px; border-radius: 12px;
+    margin-bottom: 15px; border: 1px solid var(--border);
+    text-align: center; box-shadow: 0 2px 8px var(--shadow);
     position: relative;
   }
   
   .cal {
-    background: #ecf0f1;
-    padding: 5px;
-    border-radius: 6px;
-    margin: 10px 0;
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-    border: 1px solid var(--border);
+    background: #ecf0f1; padding: 5px; border-radius: 6px;
+    margin: 10px 0; display: grid; grid-template-columns: repeat(7, 1fr);
+    gap: 2px; border: 1px solid var(--border);
   }
   .day {
-    padding: 6px 0;
-    font-size: 0.75rem;
-    color: #bdc3c7;
-    position: relative;
-    border-radius: 3px;
-    background: #fff;
+    padding: 6px 0; font-size: 0.75rem; color: #bdc3c7;
+    position: relative; border-radius: 3px; background: #fff;
     text-align: center;
   }
   .day.today { background: var(--main); color: #fff; font-weight: bold; }
   .day.match { background: var(--lose); color: #fff; font-weight: bold; }
   .mark {
-    font-size: 0.5rem;
-    line-height: 1;
-    position: absolute; bottom: 0; left: 0; right: 0;
-    opacity: 0.8;
+    font-size: 0.5rem; line-height: 1;
+    position: absolute; bottom: 0; left: 0; right: 0; opacity: 0.8;
   }
 
-  /* === カードデザイン (v37.0 Layout + Wide) === */
+  /* === カードデザイン === */
   .card {
-    background: var(--card);
-    padding: 12px; /* 余白拡大 */
-    border-radius: 10px;
-    margin-bottom: 15px;
-    border-left: 6px solid var(--main); /* v37の特徴である左ボーダー */
-    position: relative;
-    box-shadow: 0 2px 5px var(--shadow);
-    border: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    background: var(--card); padding: 12px; border-radius: 10px;
+    margin-bottom: 15px; border-left: 6px solid var(--main);
+    position: relative; box-shadow: 0 2px 5px var(--shadow);
+    border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px;
   }
   
-  /* ポジション別ボーダー色 */
   .card[data-pos="OH"] { border-left-color: var(--c-oh); }
   .card[data-pos="MB"] { border-left-color: var(--c-mb); }
   .card[data-pos="S"] { border-left-color: var(--c-s); }
   .card[data-pos="L"] { border-left-color: var(--c-l); }
 
-  .c-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 4px;
-  }
-  .c-name {
-    font-size: 1.15rem; /* 大きく */
-    font-weight: bold;
-    color: var(--text);
-  }
-  .c-meta {
-    font-size: 0.8rem;
-    color: var(--sub);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .badge {
-    font-size: 0.7rem;
-    padding: 2px 6px;
-    border-radius: 4px;
-    color: #fff;
-    vertical-align: middle;
-  }
-  .st { background: var(--accent); }
-  .li { background: var(--ok); }
-  
-  .c-ovr {
-    background: #ecf0f1;
-    color: var(--text);
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-weight: bold;
-    font-size: 0.9rem;
-    border: 1px solid var(--border);
-  }
+  .c-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .c-name { font-size: 1.15rem; font-weight: bold; color: var(--text); }
+  .c-meta { font-size: 0.8rem; color: var(--sub); display: flex; align-items: center; gap: 8px; }
+  .badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; color: #fff; vertical-align: middle; }
+  .st { background: var(--accent); } .li { background: var(--ok); }
+  .c-ovr { background: #ecf0f1; color: var(--text); padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 0.9rem; border: 1px solid var(--border); }
 
-  /* ★v37.0スタイル: 2列グリッドのステータス表示 */
   .stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* 2列に戻す */
-    gap: 6px 12px; /* 横の間隔を広めに */
-    background: #f7f9fa;
-    padding: 8px;
-    border-radius: 6px;
-    margin: 6px 0;
-    border: 1px solid #eee;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px;
+    background: #f7f9fa; padding: 8px; border-radius: 6px;
+    margin: 6px 0; border: 1px solid #eee;
   }
   .s-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.85rem; /* 文字サイズアップ */
-    align-items: center;
-    border-bottom: 1px dashed #e0e0e0;
-    padding-bottom: 2px;
+    display: flex; justify-content: space-between;
+    font-size: 0.85rem; align-items: center;
+    border-bottom: 1px dashed #e0e0e0; padding-bottom: 2px;
   }
-  /* ランクバッジ */
   .rnk {
-    display: inline-block;
-    width: 22px;
-    text-align: center;
-    border-radius: 3px;
-    font-size: 0.75rem;
-    margin-right: 6px;
-    color: #fff;
-    font-weight: bold;
-    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+    display: inline-block; width: 22px; text-align: center;
+    border-radius: 3px; font-size: 0.75rem; margin-right: 6px;
+    color: #fff; font-weight: bold; text-shadow: 0 1px 1px rgba(0,0,0,0.2);
   }
   .r-SS{background:linear-gradient(45deg,#d35400,#f1c40f);} 
   .r-S{background:#f1c40f;color:#000;text-shadow:none;} 
@@ -213,80 +125,20 @@
   .up-2 { color: #27ae60; font-weight: bold; font-size: 0.8rem; }
   .up-1 { color: #3498db; font-size: 0.7rem; }
 
-  /* スキルエリア */
-  .c-skills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    padding-top: 4px;
-  }
-  .sk-tag {
-    font-size: 0.7rem;
-    padding: 3px 8px;
-    border-radius: 4px;
-    color: #fff;
-    font-weight: bold;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-  }
-  .sk-p { background: var(--sk-pos); }
-  .sk-n { background: var(--sk-neg); }
+  .c-skills { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 4px; }
+  .sk-tag { font-size: 0.7rem; padding: 3px 8px; border-radius: 4px; color: #fff; font-weight: bold; box-shadow: 0 1px 2px rgba(0,0,0,0.1); }
+  .sk-p { background: var(--sk-pos); } .sk-n { background: var(--sk-neg); }
 
-  /* 操作ボタン */
-  .c-btm {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 4px;
-    margin-top: 4px;
-  }
-  .c-menu-btn {
-    font-size: 0.7rem;
-    padding: 8px 2px; /* タップしやすく */
-    background: #ecf0f1;
-    color: var(--text);
-    border-radius: 4px;
-    text-align: center;
-  }
-  .c-menu-btn.active {
-    background: var(--accent); /* v37系はアクセントカラー */
-    color: #fff;
-  }
-  .c-pos-btn {
-    flex: 1;
-    font-size: 0.7rem;
-    padding: 6px;
-    background: #ecf0f1;
-    border-radius: 4px;
-    text-align: center;
-  }
+  .c-btm { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 4px; }
+  .c-menu-btn { font-size: 0.7rem; padding: 8px 2px; background: #ecf0f1; color: var(--text); border-radius: 4px; text-align: center; }
+  .c-menu-btn.active { background: var(--accent); color: #fff; }
+  .c-pos-btn { flex: 1; font-size: 0.7rem; padding: 6px; background: #ecf0f1; border-radius: 4px; text-align: center; }
   .c-pos-btn.active { background: var(--main); color: #fff; }
 
-  /* 試合画面・モーダル（v37系のデザインを踏襲） */
-  #ui-match {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.85);
-    z-index: 2000;
-    overflow-y: auto; padding: 10px;
-    backdrop-filter: blur(5px);
-  }
+  #ui-match { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; overflow-y: auto; padding: 10px; backdrop-filter: blur(5px); }
   .m-container { max-width: 600px; margin: 0 auto; }
-  .court {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
-    background: #34495e; padding: 8px;
-    border-radius: 8px; border: 2px solid #fff;
-    margin-bottom: 10px;
-  }
-  .pos {
-    cursor: pointer;
-    background: rgba(255,255,255,0.95);
-    color: #2c3e50;
-    padding: 8px 2px; text-align: center;
-    border-radius: 4px;
-    font-size: 0.75rem; font-weight: bold;
-    min-height: 50px;
-    display: flex; flex-direction: column; justify-content: center;
-    box-shadow: 0 2px 2px rgba(0,0,0,0.2);
-  }
+  .court { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; background: #34495e; padding: 8px; border-radius: 8px; border: 2px solid #fff; margin-bottom: 10px; }
+  .pos { cursor: pointer; background: rgba(255,255,255,0.95); color: #2c3e50; padding: 8px 2px; text-align: center; border-radius: 4px; font-size: 0.75rem; font-weight: bold; min-height: 50px; display: flex; flex-direction: column; justify-content: center; box-shadow: 0 2px 2px rgba(0,0,0,0.2); }
   .pos.back { background: rgba(236,240,241,0.9); color: #7f8c8d; }
   
   .score { text-align: center; font-size: 3.5rem; font-weight: 800; display: flex; justify-content: center; gap: 30px; margin-bottom: 5px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
@@ -517,7 +369,7 @@ window.onload = function() {
   };
 
   try {
-    const save = localStorage.getItem("EIKAN_V54_0_FINAL");
+    const save = localStorage.getItem("EIKAN_V54_1_FINAL");
     if (save) {
       const d = JSON.parse(save); 
       // マイグレーション
@@ -543,13 +395,14 @@ window.onload = function() {
 
 function HardReset() { 
   if(confirm("全データを削除して初期化しますか？")) { 
-    localStorage.removeItem("EIKAN_V54_0_FINAL"); 
+    localStorage.removeItem("EIKAN_V54_1_FINAL"); 
     location.reload(); 
   } 
 }
 
 function InitGame() {
   G.team = []; G.date = { m:4, d:1, y:1 }; G.lv = 1; G.pracMonth = 0;
+  // 先輩生成
   for(let i=0; i<3; i++) G.team.push(MakePlayer(2));
   for(let i=0; i<3; i++) G.team.push(MakePlayer(3));
   ChangeView('v-prologue'); 
@@ -592,7 +445,8 @@ function MakePlayer(grade) {
   const hNow = hInit;
   
   const skills = []; 
-  SKILLS.forEach(sk => { if(Math.random() < 0.05) skills.push(sk.id); }); // 5%
+  // ★修正: 5%の確率
+  SKILLS.forEach(sk => { if(Math.random() < 0.05) skills.push(sk.id); }); 
 
   const gTypeVal = Math.random();
   let gType = 1; let gMax = 5; 
@@ -1272,7 +1126,7 @@ function FinishMatch() {
         if(!G.match.isNat && (G.match.name.includes("IH")||G.match.name.includes("春"))) {
           let nm=G.date.m, nd=G.date.d+7; 
           if(nd>30){nm++; nd-=30;}
-          G.match.next = {m:nm, d:nd, name:G.match.name,replace("予選",""), round:1, isNat:true};
+          G.match.next = {m:nm, d:nd, name:G.match.name.replace("予選",""), round:1, isNat:true};
           document.getElementById('btn-next-rd').style.display='block'; 
           Log("全国へ！","gold");
         } else { 
